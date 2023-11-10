@@ -22,8 +22,6 @@ console.log(numbers.concat(numbers2))
 console.log(numbers.reverse()[0])
 console.log("Marek".endsWith("ek"))
 
-const arr1 = ["Anna", "Maria"];
-
 function filterNumbersGreaterThanThree(numArray) {
 	let resArray = new Array();
 	for (let index = 0; index < numArray.length; index++) {	
@@ -40,7 +38,9 @@ console.log(filterNumbersGreaterThanThree(numbers))
 console.log(filterNumbers(numbers, ((number) => number > 3)))
 console.log(filterNumbers(numbers, ((number) => number < 3)))
 
-
+const arr1 = ["Anna", "Maria", "Marek", "Tomasz"]; 
+const filterArray = (arr) => arr.filter((name) => name.length <= 5 && name.endsWith("ek")); 
+console.log(filterArray(arr1));
 
 
 function myRecursion(x) { //zad1 
