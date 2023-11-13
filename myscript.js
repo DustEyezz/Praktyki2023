@@ -1,77 +1,42 @@
 const books = [
-    {title: 'Total loss', pages: 600, genre: 'fantasy'},
+    {title: 'Total loss 100', pages: 600, genre: 'fantasy'},
     {title: 'Total enlightenment', pages: 250, genre: 'romance'},
     {title: 'Big loss', pages: 400, genre: 'fantasy'},
     {title: 'Tenth Joy', pages: 32, genre: 'action'},
-    {title: 'Quickfix', pages: 15, genre: 'fantasy'},
-    {title: 'World Ender', pages: 199, genre: 'fantasy'},
+    {title: 'Quickfix number 4', pages: 15, genre: 'fantasy'},
+    {title: 'World Ender 3', pages: 199, genre: 'fantasy'},
     {title: 'Paranormal', pages: 200, genre: 'thriller'},
 ];
 
-const mapToPages = (list, operation = ((page) => page)) => list.map(({pages}) => operation(pages))
-console.log(mapToPages(books, ((page) => page)))
+const filterTitleStartsWithTotal = (list) => list.filter((book) => book.title.startsWith('Total'));
+const filterGenreIsFantasy = (list) => list.filter((book) => book.genre === 'fantasy');
 
-const SumPages = (myPages, initialValue = 0) => myPages.reduce((result, newPage) => result + newPage, initialValue)
-console.log(SumPages(mapToPages(books), 1000))
-console.log(SumPages(mapToPages(books), 0))
+const mapToPages = (list) => list.map(({pages}) => pages)
+const sumPages = (book) => book.reduce((acc, newPage) => acc + newPage)
 
-const numbers = [1, 2, 3, 4, 5];
-const numbers2 = [6, 7]
+//console.log(sumPages(mapToPages(filterTitleStartsWithTotal(books))))
 
-console.log(numbers.concat(numbers2))
-console.log(numbers.reverse()[0])
-console.log("Marek".endsWith("ek"))
+//const getPagesWhereTitleIsTotal = sumPages(mapToPages(filterTitleStartsWithTotal(books)))
 
-function filterNumbersGreaterThanThree(numArray) {
-	let resArray = new Array();
-	for (let index = 0; index < numArray.length; index++) {	
-		if(numArray[index] > 3) {
-			resArray.push(numArray[index])
+const badCompose = (fn1, fn2, fn3) => (x) => fn3(fn2(fn1(x)));
+
+const compose = (...fns) => (x) => fns.reduceRight((acc, fn) => fn(acc), x)
+const compose2 = (...fns) => (x) => fns.reduce((acc, fn) => fn(acc), x)
+
+const getPagesWhereTitleIsTotal = compose(sumPages, mapToPages, filterTitleStartsWithTotal, filterGenreIsFantasy)
+const getPagesWhereTitleIsTotal2 = compose2(filterTitleStartsWithTotal, filterGenreIsFantasy, mapToPages, sumPages)
+
+console.log(getPagesWhereTitleIsTotal(books))
+
+
+filtr(tablica1)
+
+function filtr(arr, filtered){
+	var res = new Array();
+	for (let index = 0; index < arr.length; index++) {
+		if (arr[index] == filtered){
+			res.push(arr[index])
 		}
 	}
-	return resArray;
-}
-
-const filterNumbers = (numberArray, comparator) => numberArray.filter((number) => comparator(number));
-
-console.log(filterNumbersGreaterThanThree(numbers))
-console.log(filterNumbers(numbers, ((number) => number > 3)))
-console.log(filterNumbers(numbers, ((number) => number < 3)))
-
-const arr1 = ["Anna", "Maria", "Marek", "Tomasz"]; 
-const filterArray = (arr) => arr.filter((name) => name.length <= 5 && name.endsWith("ek")); 
-console.log(filterArray(arr1));
-
-
-function myRecursion(x) { //zad1 
-	if (x > 0){ // do zrobienia z y
-		console.log(x)
-		myRecursion(x - 1)
-	}
-}
-
-myRecursion(10)
-
-function joinArrays(Arr1, Arr2) { //zad 3
-	//for (let index = 0; index < Arr1.length; index++) {
-		//Arr1.push("Cos tu trzeba zrobic")
-	//}
-	return Arr1
-}
-console.log(joinArrays(numbers, ["Grzegorz", "Marek"]))
-
-function myFilter(myArray, elementToBeFiltered) {
-	let resArray = new Array();
-	for (let index = 0; index < myArray.length; index++) {
-		//if (myArray[index]) { //warunek do zrobienia
-			//resArray.push("Cos");
-		//}
-	} 
-}
-
-function mySum(Arr) {
-	let result = 0;
-	for (let index = 0; index < Arr.length; index++) {
-		result+=index; // tu do poprawy by nie dodawało index a elementy z tablicy
-	}
+	return res
 }
