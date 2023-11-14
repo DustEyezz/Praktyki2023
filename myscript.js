@@ -1,5 +1,5 @@
 const genPicture = () => {
-	fetch('https://jsonplaceholder.typicode.com/photos/9999999')
+	fetch('https://jsonplaceholder.typicode.com/photos/1')
 	.then((response) => {
 		if(!response.ok) {
 			throw new Error("Network response was not OK")
