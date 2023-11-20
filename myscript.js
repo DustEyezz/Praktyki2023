@@ -1,42 +1,35 @@
-const genPicture = () => {
-	fetch('https://jsonplaceholder.typicode.com/photos/1')
-	.then((response) => {
-		if(!response.ok) {
-			throw new Error("Network response was not OK")
-		}
-		return response.json()
-	})
-	.then((myJson) => {
-		let myImage = document.createElement('img');
-		myImage.src = myJson["url"];
-		console.log("success");
-		console.log(myJson);
-		console.log(myJson["url"])
-		document.querySelector('body').appendChild(myImage)
-	})
-	.catch((error) => console.error('There has been some kind of problem: ', error))
-}
+const multiplyByTwo = (x) => x*2;
+const addTwoNumbers = (x,y) => x+y;
 
-const myPromise = new Promise((resolve, reject) => {
-	setTimeout(() => reject(400), 1000)
-})
+const unaryCurrying = (x) => (y) => x+y
+console.log(unaryCurrying(1)(2));
 
-myPromise
-	.then((myText) => {
-		console.log(myText);
-	})
-	.catch((error) => console.error('There has been some kind of problem, code: ', error))
+const books = [
+    {title: 'Total loss 100', pages: 600, genre: 'fantasy'},
+    {title: 'Total enlightenment', pages: 250, genre: 'romance'},
+    {title: 'Big loss', pages: 400, genre: 'fantasy'},
+    {title: 'Tenth Joy', pages: 32, genre: 'action'},
+    {title: 'Quickfix number 4', pages: 15, genre: 'fantasy'},
+    {title: 'World Ender 3', pages: 199, genre: 'fantasy'},
+    {title: 'Paranormal', pages: 200, genre: 'thriller'},
+];
 
-const myFunction = (x) => {
-	return new Promise((resolve, reject) => {
-		if (typeof(x) == "string") {
-			resolve("X jest stringiem")
-		} else {
-			reject("X nie jest stringiem")
-		}
-	})
-}
+const filterTitleStartsWithTotal = (list) => list.filter((book) => book.title.startsWith('Total'));
+const filterGenreIsFantasy = (list) => list.filter((book) => book.genre === 'fantasy');
 
-myFunction(5)
-.then(console.log)
-.catch(console.error)
+const mapToPages = (list) => list.map(({pages}) => pages)
+const sumPages = (book) => book.reduce((acc, newPage) => acc + newPage)
+
+//console.log(sumPages(mapToPages(filterTitleStartsWithTotal(books))))
+
+//const getPagesWhereTitleIsTotal = sumPages(mapToPages(filterTitleStartsWithTotal(books)))
+
+const badCompose = (fn1, fn2, fn3) => (x) => fn3(fn2(fn1(x)));
+
+const compose = (...fns) => (x) => fns.reduceRight((acc, fn) => fn(acc), x)
+const compose2 = (...fns) => (x) => fns.reduce((acc, fn) => fn(acc), x)
+
+const getPagesWhereTitleIsTotal = compose(sumPages, mapToPages, filterTitleStartsWithTotal)
+const getPagesWhereTitleIsTotal2 = compose2(filterTitleStartsWithTotal, filterGenreIsFantasy, mapToPages, sumPages)
+
+console.log(getPagesWhereTitleIsTotal(books))
