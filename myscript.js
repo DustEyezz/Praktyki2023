@@ -1,35 +1,101 @@
-const multiplyByTwo = (x) => x*2;
-const addTwoNumbers = (x,y) => x+y;
+const genPicture = () => fetch("https://api.unsplash.com/photos/random?client_id=KBhAd8BBDYdSYAU1ikLeq1QsjRfq9NSLC6G8ubnDFr4")
+	.then((response) => {
+		if (!response.ok) {
+			throw new Error('Network response was not OK')
+		}
+		return (response.json());
+	})
+	.then((myJson) => {
+		let myImage;
+		let downloadsButton;
+		if (document.getElementById('myImg')) {
+			myImage = document.getElementById('myImg');
+			myImage.src = myJson.urls.raw;
+			downloadsButton = document.getElementById('downloadsButton');
+			downloadsButton.onclick = function () { showDownloadsText(myJson.downloads) }
+			if (document.getElementById('myTextElement')) {
+				console.log("here")
+				document.getElementById('myTextElement').innerHTML = myJson.downloads
+			}
+		}
+		else {
+			myImage = document.createElement('img');
+			myImage.width = "500";
+			myImage.height = "500";
+			myImage.src = myJson.urls.raw;
+			myImage.id = "myImg";
+			downloadsButton = document.createElement('button')
+			downloadsButton.id = "downloadsButton"
+			downloadsButton.onclick = function () { showDownloadsText(myJson.downloads) }
+			downloadsButton.style.width = '200px';
+			downloadsButton.style.height = '200px'
+			document.body.appendChild(downloadsButton);
+			document.body.appendChild(myImage);
+			document.body.insertBefore(myImage, downloadsButton)
+		}
+	})
+	.catch((error) => {
+		console.error('There has been some kind of problem, error: ', error);
+	})
 
-const unaryCurrying = (x) => (y) => x+y
-console.log(unaryCurrying(1)(2));
+const showDownloadsText = (text) => {
+	let myTextElement = document.createElement('div')
+	myTextElement.innerHTML = text;
+	myTextElement.id = "myTextElement";
+	document.getElementById('downloadsButton').appendChild(myTextElement)
+}
 
-const books = [
-    {title: 'Total loss 100', pages: 600, genre: 'fantasy'},
-    {title: 'Total enlightenment', pages: 250, genre: 'romance'},
-    {title: 'Big loss', pages: 400, genre: 'fantasy'},
-    {title: 'Tenth Joy', pages: 32, genre: 'action'},
-    {title: 'Quickfix number 4', pages: 15, genre: 'fantasy'},
-    {title: 'World Ender 3', pages: 199, genre: 'fantasy'},
-    {title: 'Paranormal', pages: 200, genre: 'thriller'},
-];
+const getTopStory = () => {
+	fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty')
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error('Network response was not OK')
+			}
+			return (response.json());
+		})
+		.then((myJson) => {
+			getAndShowStory(myJson[0])
+		})
+		.catch((error) => {
+			console.error('There has been some kind of problem, error: ', error);
+		})
+}
+const getAndShowStory = (id) => {
+	fetch("https://hacker-news.firebaseio.com/v0/item/" + id + ".json?print=pretty")
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error('Network response was not OK')
+			}
+			return (response.json());
+		})
+		.then((myJson) => {
+			let myTextElement2 = document.createElement('div')
+			myTextElement2.innerHTML = myJson.title;
+			myTextElement2.style.color = "white";
+			myTextElement2.id = "myTextElement2";
+			document.body.appendChild(myTextElement2)
+		})
+		.catch((error) => {
+			console.error('There has been some kind of problem, error: ', error);
+		})
+}
 
-const filterTitleStartsWithTotal = (list) => list.filter((book) => book.title.startsWith('Total'));
-const filterGenreIsFantasy = (list) => list.filter((book) => book.genre === 'fantasy');
-
-const mapToPages = (list) => list.map(({pages}) => pages)
-const sumPages = (book) => book.reduce((acc, newPage) => acc + newPage)
-
-//console.log(sumPages(mapToPages(filterTitleStartsWithTotal(books))))
-
-//const getPagesWhereTitleIsTotal = sumPages(mapToPages(filterTitleStartsWithTotal(books)))
-
-const badCompose = (fn1, fn2, fn3) => (x) => fn3(fn2(fn1(x)));
-
-const compose = (...fns) => (x) => fns.reduceRight((acc, fn) => fn(acc), x)
-const compose2 = (...fns) => (x) => fns.reduce((acc, fn) => fn(acc), x)
-
-const getPagesWhereTitleIsTotal = compose(sumPages, mapToPages, filterTitleStartsWithTotal)
-const getPagesWhereTitleIsTotal2 = compose2(filterTitleStartsWithTotal, filterGenreIsFantasy, mapToPages, sumPages)
-
-console.log(getPagesWhereTitleIsTotal(books))
+const genMovie = () => {
+	fetch('https://api.themoviedb.org/3/movie/550?api_key=a873c1468183ea42cbb937efd3b8462c')
+	.then((response) => {
+		if (!response.ok) {
+			throw new Error('Network response was not OK')
+		}
+		return (response.json());
+	})
+	.then((myFunnyJson) => {
+		let myTextElement3 = document.createElement('div')
+			myTextElement3.innerHTML = myFunnyJson.title;
+			myTextElement3.style.color = "white";
+			myTextElement3.id = "myTextElement3";
+			document.body.appendChild(myTextElement3)
+	})
+	.catch((error) => {
+		console.error('There has been some kind of problem, error: ', error);
+	})
+}
